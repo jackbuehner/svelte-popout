@@ -1,8 +1,17 @@
 <script lang="ts">
-	export let width: number
-	export let height: number
-	export let top: number
-	export let left: number
+	interface Props {
+		width: number;
+		height: number;
+		top: number;
+		left: number;
+	}
+
+	let {
+		width = $bindable(),
+		height = $bindable(),
+		top = $bindable(),
+		left = $bindable()
+	}: Props = $props();
 </script>
 
 <label for="widthSlider">Width:</label>

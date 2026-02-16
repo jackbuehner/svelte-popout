@@ -1,5 +1,4 @@
-<script context="module" lang="ts">
-	import { createEventDispatcher } from 'svelte'
+<script module lang="ts">
 	import { enableStyleCopying } from './observe-styles.js'
 	// import { BROWSER } from 'esm-env'
 
@@ -48,10 +47,7 @@
 		copyStyles?: boolean
 	}
 
-	export function popout(
-		el: HTMLElement,
-		{ features, windowInitialised, copyStyles = true }: PopoutSettings = {}
-	) {
+	export function popout(el: HTMLElement, { features, windowInitialised, copyStyles = true }: PopoutSettings = {}) {
 		// generate features string
 		const featureString = Object.entries({ ...(features || {}), popup: 1 })
 			.filter(([_, val]) => val !== undefined)
@@ -63,8 +59,7 @@
 		const customDestroy = windowInitialised?.(popoutWindow)
 
 		// setup style syncing and grab the destroy callback
-		const disableStyleCopying =
-			copyStyles && popoutWindow ? enableStyleCopying(popoutWindow.document.head) : null
+		const disableStyleCopying = copyStyles && popoutWindow ? enableStyleCopying(popoutWindow.document.head) : null
 
 		// Handle updates, making sure to change to a modification pattern
 		function update({ features = {} }: PopoutSettings = {}) {
@@ -93,7 +88,6 @@
 			}
 		}
 
-        // append the element to the popup window  
 		const target = popoutWindow?.document.body
 		if (!target) throw new Error('Window was not found for updating')
 		target.appendChild(el)
@@ -107,19 +101,34 @@
 </script>
 
 <script lang="ts">
-	export let width: Features['width'] = undefined
-	export let height: Features['height'] = undefined
-	export let top: Features['top'] = undefined
-	export let left: Features['left'] = undefined
-	export let copyStyles = true
-	export let positionPolling = true
-	export let positionPollingMs = 100
-	export let windowInitialised: PopoutSettings['windowInitialised'] = undefined
+	interface Props {
+		// append the element to the popup window
+		width?: Features['width']
+		height?: Features['height']
+		top?: Features['top']
+		left?: Features['left']
+		copyStyles?: boolean
+		positionPolling?: boolean
+		positionPollingMs?: number
+		windowInitialised?: PopoutSettings['windowInitialised']
+		children?: import('svelte').Snippet
+		onclose?: (evt: Event, popupWindow: Window | null) => void
+		onbeforeunload?: (evt: BeforeUnloadEvent, popupWindow: Window | null) => void
+	}
 
-	const dispatch = createEventDispatcher<{
-		close: { evt: Event; popupWindow: Window | null }
-		beforeunload: { evt: BeforeUnloadEvent; popupWindow: Window | null }
-	}>()
+	let {
+		width = $bindable(undefined),
+		height = $bindable(undefined),
+		top = $bindable(undefined),
+		left = $bindable(undefined),
+		copyStyles = true,
+		positionPolling = true,
+		positionPollingMs = 100,
+		windowInitialised = undefined,
+		children,
+		onclose = undefined,
+		onbeforeunload = undefined
+	}: Props = $props()
 
 	const onInitialise = (popupWindow: Window | null) => {
 		// if failed to create the window, we'll call the supplied
@@ -143,13 +152,13 @@
 
 		// attaching user-supplied close event
 		function close(evt: Event) {
-			dispatch('close', { evt, popupWindow })
+			onclose?.(evt, popupWindow)
 		}
 
 		// attaching user-supplied beforeunload
 		function beforeunload(evt: BeforeUnloadEvent) {
 			updateDimensions()
-			dispatch('beforeunload', { evt, popupWindow })
+			onbeforeunload?.(evt, popupWindow)
 		}
 
 		// if polling is enabled, check every x ms for changes
@@ -186,5 +195,5 @@
 	}}
 	hidden
 >
-	<slot />
+	{@render children?.()}
 </div>

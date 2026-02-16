@@ -2,7 +2,15 @@
 	"name": "svelte-popout",
 	"version": "0.0.1",
 	"license": "MIT",
-	"keywords": ["svelte", "popup","window","popout"],
+	"keywords": [
+		"svelte",
+		"popup",
+		"window",
+		"popout"
+	],
+	"engines": {
+		"node": ">=24.0.0"
+	},
 	"scripts": {
 		"dev": "vite dev --port 1313",
 		"build": "vite build && npm run package",
@@ -29,14 +37,14 @@
 		"!dist/**/*.spec.*"
 	],
 	"peerDependencies": {
-		"svelte": "^4.0.0"
+		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.41.2",
 		"@sveltejs/adapter-auto": "^3.1.1",
-		"@sveltejs/kit": "^2.5.0",
-		"@sveltejs/package": "^2.2.6",
-		"@sveltejs/vite-plugin-svelte": "^3.0.2",
+		"@sveltejs/kit": "^2.52.0",
+		"@sveltejs/package": "^2.3.7",
+		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@testing-library/jest-dom": "^6.4.1",
 		"@testing-library/svelte": "^4.1.0",
 		"@testing-library/user-event": "^14.5.2",
@@ -46,17 +54,17 @@
 		"@typescript-eslint/parser": "^6.20.0",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-svelte": "^2.35.1",
+		"eslint-plugin-svelte": "^2.45.1",
 		"jsdom": "^24.0.0",
 		"prettier": "^3.2.5",
-		"prettier-plugin-svelte": "^3.1.2",
+		"prettier-plugin-svelte": "^3.2.6",
 		"publint": "^0.1.16",
-		"svelte": "^4.2.9",
-		"svelte-check": "^3.6.3",
+		"svelte": "^5.0.0",
+		"svelte-check": "^4.0.0",
 		"tslib": "^2.6.2",
-		"typescript": "^5.3.3",
-		"vite": "^5.0.12",
-		"vitest": "^1.2.2"
+		"typescript": "^5.5.0",
+		"vite": "^6.4.1",
+		"vitest": "^4.0.18"
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
